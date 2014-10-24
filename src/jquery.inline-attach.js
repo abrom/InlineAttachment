@@ -20,6 +20,15 @@
             },
             setValue: function(val) {
                 $this.val(val);
+            },
+            getSelectionStart: function() {
+                return $this.get(0).selectionStart;
+            },
+            getSelectionEnd: function() {
+                return $this.get(0).selectionEnd;
+            },
+            supportsSelection: function() {
+                return $this.get(0).selectionStart || $this.get(0).selectionStart === '0';
             }
         };
     }

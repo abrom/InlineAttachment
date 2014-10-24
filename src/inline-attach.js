@@ -168,6 +168,27 @@
         }
 
         /**
+         * Insert a line of text at the current cursor position or if not supported at the end
+         *
+         * @param {Editor} the editor in which to insert the new text
+         * @param {String} new text to be inserted
+         * @param {Boolean} indicating whether the new text should be inserted at the cursor
+         */
+        function insertText(editor, newText, atCursor) {
+            var currentValue = editor.getValue();
+            if (atCursor && editor.supportsSelection()) {
+                var startPos = editor.getSelectionStart();
+                var endPos = editor.getSelectionEnd();
+
+                editor.setValue(currentValue.substring(0, startPos) +
+                    newText + "\n" +
+                    currentValue.substring(endPos, currentValue.length));
+            } else {
+                editor.setValue(appendInItsOwnLine(currentValue, newText));
+            }
+        }
+
+        /**
          * When a file has been received by a drop or paste event
          * @param {Blob} file
          */
@@ -175,7 +196,7 @@
             var result = settings.onReceivedFile.call(this, file);
             if (result !== false) {
                 lastValue = settings.progressText;
-                editor.setValue(appendInItsOwnLine(editor.getValue(), lastValue));
+                insertText(editor, lastValue, settings.insertAtCursor);
             }
         };
 
@@ -246,6 +267,15 @@
             },
             setValue: function(val) {
                 input.value = val;
+            },
+            getSelectionStart: function() {
+                return input.selectionStart;
+            },
+            getSelectionEnd: function() {
+                return input.selectionEnd;
+            },
+            supportsSelection: function() {
+                return input.selectionStart || input.selectionStart === '0';
             }
         };
     };
@@ -301,6 +331,11 @@
          * by the filename that has been returned by the server
          */
         urlText: "![file]({filename})",
+
+        /**
+         * Insert markdown at the cursor (or default to the end of the input)
+         */
+        insertAtCursor: false,
 
         /**
          * Text for default error when uploading
