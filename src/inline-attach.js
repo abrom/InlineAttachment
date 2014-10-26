@@ -415,11 +415,9 @@
         }, false);
         input.addEventListener('dragenter', function(e) {
             e.stopPropagation();
-            e.preventDefault();
         }, false);
         input.addEventListener('dragover', function(e) {
             e.stopPropagation();
-            e.preventDefault();
         }, false);
     };
 

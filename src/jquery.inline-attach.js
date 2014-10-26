@@ -56,7 +56,6 @@
                 },
                 'dragenter dragover': function(e) {
                     e.stopPropagation();
-                    e.preventDefault();
                 }
             });
         });
